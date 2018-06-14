@@ -77,4 +77,28 @@ namespace KolkoKrzyzyk
             }
         }
     }
+
+    /*
+    public class KK
+    {
+        public Znak Znak { get; set; }
+
+        public KK()
+        {
+        }
+
+        public Znak Przeciwny()
+        {
+            switch (Znak)
+            {
+                case Znak.Kolko:
+                    return Znak.Krzyzyk;
+                case Znak.Krzyzyk:
+                    return Znak.Kolko;
+                default:
+                    return Znak.Puste;
+            }
+        }
+    }
+    */
 }

@@ -25,26 +25,10 @@ namespace KolkoKrzyzyk
 
         static void Main(string[] args)
         {
-            Konsola konsola = new Konsola();
-            int rozmiar = konsola.PobierzRozmiar();
-            int ileByWygrac = konsola.PobierzIleByWygrac(rozmiar);
-            Plansza plansza = new Plansza(rozmiar, ileByWygrac);
-            WyswietlaczPlanszy wyswietlaczPlanszy = new WyswietlaczPlanszy();
-            wyswietlaczPlanszy.NarysujPlansze(plansza);
-            Znak aktualnyZnak = Znak.Krzyzyk;
+            Budowniczy budowniczy = new Budowniczy(true, true, Znak.Krzyzyk);
+            KoordynatorRozgrywki koordynatorRozgrywki = budowniczy.StworzKoordynatora();
 
-            for (int i = 0; i < 9; i++)
-            {
-                Console.WriteLine("Podaj wspolrzedne X (wiersze) i Y (kolumny): ");
-                int x = konsola.PobierzX(rozmiar);
-                int y = konsola.PobierzY(rozmiar);
-
-                plansza.PoleGry[x, y].Znak = aktualnyZnak;
-                aktualnyZnak = PrzeciwnyZnak(aktualnyZnak);
-
-
-                wyswietlaczPlanszy.NarysujPlansze(plansza);
-            }
+            koordynatorRozgrywki.Graj();
 
             Console.WriteLine("Press any key to exit.");
             Console.ReadKey();
