@@ -23,17 +23,25 @@ namespace KolkoKrzyzyk
         public void Graj()
         {
             wyswietlaczPlanszy.NarysujPlansze(plansza);
+            int nrRuchu = 0;
             bool wygrana = false;
-            while(wygrana != true)
+            while(wygrana != true && nrRuchu < plansza.PoleGry.Length)
             {
                 int wynik = WykonajRuch(aktualnyGracz);
                 aktualnyGracz = TenDrugi();
+                nrRuchu++;
                 if(wynik == 1)
                 {
                     wygrana = true;
+                    Console.WriteLine("Wygrał gracz {0}!", TenDrugi().Znak);
+                }
+                if(nrRuchu == plansza.PoleGry.Length)
+                {
+                    wygrana = true;
+                    Console.WriteLine("Remis. Koniec gry.");
                 }
             }
-            Console.WriteLine("Wygrał gracz {0}!", TenDrugi().Znak);
+            
         }
 
         private int WykonajRuch(IGracz gracz)
