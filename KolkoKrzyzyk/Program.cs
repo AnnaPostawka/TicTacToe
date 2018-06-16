@@ -7,12 +7,12 @@ namespace KolkoKrzyzyk
     {
         static void Main(string[] args)
         {
-            Budowniczy budowniczy = new Budowniczy(true, true, Znak.Krzyzyk);
+            Budowniczy budowniczy = new Budowniczy();
             KoordynatorRozgrywki koordynatorRozgrywki = budowniczy.StworzKoordynatora();
 
-            koordynatorRozgrywki.Graj();
+            koordynatorRozgrywki.Graj();            
 
-            Console.WriteLine("Press any key to exit.");
+            Console.WriteLine("Nacisnij dowolny klawisz, aby zakonczyc.");
             Console.ReadKey();
         }
     }

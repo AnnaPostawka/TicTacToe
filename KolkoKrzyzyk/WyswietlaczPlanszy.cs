@@ -4,13 +4,13 @@ using System.Text;
 
 namespace KolkoKrzyzyk
 {
-    class WyswietlaczPlanszy
+    public class WyswietlaczPlanszy
     {
         public WyswietlaczPlanszy()
         {
         }
 
-        public void NarysujPlansze(Plansza plansza)
+        public static void NarysujPlansze(Plansza plansza)
         {
             for (int i = 0; i < plansza.Rozmiar; i++)
             {
@@ -34,7 +34,7 @@ namespace KolkoKrzyzyk
             Console.WriteLine("-");
         }
 
-        private void NarysujZnak(int i, int j, Plansza plansza)
+        private static void NarysujZnak(int i, int j, Plansza plansza)
         {
             switch (plansza.PoleGry[i, j].Znak)
             {
