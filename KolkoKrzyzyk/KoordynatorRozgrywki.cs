@@ -51,8 +51,7 @@ namespace KolkoKrzyzyk
             plansza.UstawZnak(ruch.X, ruch.Y, gracz.Znak);
 
             FunkcjaOceny funkcjaOceny = new FunkcjaOceny();
-            int ocena = funkcjaOceny.Ocena(plansza, gracz.Znak);
-            if (ocena == funkcjaOceny.WagaZwyciestwa)
+            if (funkcjaOceny.CzyWygrana(gracz.Znak, plansza) == true)
             {
                 return true;
             }

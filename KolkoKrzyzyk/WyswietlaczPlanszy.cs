@@ -12,26 +12,58 @@ namespace KolkoKrzyzyk
 
         public static void NarysujPlansze(Plansza plansza)
         {
-            for (int i = 0; i < plansza.Rozmiar; i++)
+            WspolrzedneKolumny(plansza.Rozmiar);
+            for (int wiersz = 0; wiersz < plansza.Rozmiar; wiersz++)
             {
-                for (int j = 0; j < plansza.Rozmiar; j++)
-                {
-                    Console.Write("----");
-                }
-                Console.WriteLine("-");
-                for (int j = 0; j < plansza.Rozmiar; j++)
-                {
-                    Console.Write("| ");
-                    NarysujZnak(i, j, plansza);
-                    Console.Write(" ");
-                }
-                Console.WriteLine("|");
+                LiniaPozioma(plansza.Rozmiar);
+                WspolrzedneWiersze(wiersz);
+                Kratki(plansza, wiersz);
             }
-            for (int j = 0; j < plansza.Rozmiar; j++)
+            LiniaPozioma(plansza.Rozmiar);
+        }
+
+
+        private static void Tabulacja()
+        {
+            Console.Write("    ");
+
+        }
+
+        private static void WspolrzedneWiersze(int wiersz)
+        {
+            Console.Write(" {0}  ", wiersz);   // wiersz+1
+        }
+
+        private static void LiniaPozioma(int rozmiar)
+        {
+            Tabulacja();
+            for (int i = 0; i < rozmiar; i++)
             {
                 Console.Write("----");
             }
             Console.WriteLine("-");
+
+        }
+
+        private static void WspolrzedneKolumny(int rozmiar)
+        {
+            Tabulacja();
+            for (int kolumna = 0; kolumna < rozmiar; kolumna++)
+            {
+                Console.Write("  {0} ", kolumna);   // kolumna+1
+            }
+            Console.WriteLine();
+        }
+
+        private static void Kratki(Plansza plansza, int wiersz)
+        {
+            for (int kolumna = 0; kolumna < plansza.Rozmiar; kolumna++)
+            {
+                Console.Write("| ");
+                NarysujZnak(wiersz, kolumna, plansza);
+                Console.Write(" ");
+            }
+            Console.WriteLine("|");
         }
 
         private static void NarysujZnak(int i, int j, Plansza plansza)
@@ -49,6 +81,5 @@ namespace KolkoKrzyzyk
                     break;
             }
         }
-
     }
 }

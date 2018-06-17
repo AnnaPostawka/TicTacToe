@@ -15,24 +15,21 @@ namespace KolkoKrzyzyk
 
         public int Ocena(Plansza plansza, Znak znak)
         {
-            int najdluzszaSekwencja = Policz(znak, plansza);
-            int wrogaSekwencja = Policz(Przeciwny.Znak(znak), plansza);
-            if (najdluzszaSekwencja == plansza.IleByWygrac)
-                return 100;
-            if (najdluzszaSekwencja == plansza.IleByWygrac - 1)
-                return 10;
-            if (wrogaSekwencja == plansza.IleByWygrac)
-                return -100;
-            if (wrogaSekwencja == plansza.IleByWygrac - 1)
-                return -10;
-            return 0;
+            int wynik = Policz(znak, plansza);
+            int wynikPrzeciwnika = Policz(Przeciwny.Znak(znak), plansza);
+            if (wynik == WagaZwyciestwa)
+                return WagaZwyciestwa;
+            if (wynikPrzeciwnika == WagaZwyciestwa)
+                return -(WagaZwyciestwa);
+            return wynik - wynikPrzeciwnika;
         }
 
         private int Policz(Znak znak, Plansza plansza)
         {
-            int najdluzszaSekwencja = 0;
-            int tmp = 0;
-            int tmp2 = 0;
+            int znakiPodRzad = 0;
+            int znakiIPuste = 0;
+            int znakiNiezblokowane = 0;
+            int wynik = 0;
 
             // rzad
             for (int i = 0; i < plansza.Rozmiar; i++)
@@ -41,19 +38,32 @@ namespace KolkoKrzyzyk
                 {
                     if (plansza.Znak(i, j) == znak)
                     {
-                        tmp++;
+                        DobryZnak(ref znakiIPuste, ref znakiNiezblokowane, ref znakiPodRzad);
                     }
                     else
                     {
-                        CzyNowaNajdluzszaSekwencja(ref tmp, ref najdluzszaSekwencja);
+                        if (plansza.Znak(i, j) == Znak.Puste)
+                        {
+                            if (PustaKratka(ref znakiIPuste, ref znakiPodRzad, plansza) == true)
+                            {
+                                return WagaZwyciestwa;
+                            }
+                        }
+                        else
+                        {
+                            if (Wynik(ref wynik, ref znakiIPuste, ref znakiNiezblokowane, ref znakiPodRzad, plansza) == true)
+                            {
+                                return WagaZwyciestwa;
+                            }
+                        }
                     }
                 }
-                CzyNowaNajdluzszaSekwencja(ref tmp, ref najdluzszaSekwencja);
+                if (Wynik(ref wynik, ref znakiIPuste, ref znakiNiezblokowane, ref znakiPodRzad, plansza) == true)
+                {
+                    return WagaZwyciestwa;
+                }
             }
-            if (CzyWygrana(najdluzszaSekwencja, plansza.IleByWygrac) == true)
-            {
-                return najdluzszaSekwencja;
-            }
+
             // kolumna
             for (int i = 0; i < plansza.Rozmiar; i++)
             {
@@ -61,19 +71,32 @@ namespace KolkoKrzyzyk
                 {
                     if (plansza.Znak(j, i) == znak)
                     {
-                        tmp++;
+                        DobryZnak(ref znakiIPuste, ref znakiNiezblokowane, ref znakiPodRzad);
                     }
                     else
                     {
-                        CzyNowaNajdluzszaSekwencja(ref tmp, ref najdluzszaSekwencja);
+                        if (plansza.Znak(j, i) == Znak.Puste)
+                        {
+                            if (PustaKratka(ref znakiIPuste, ref znakiPodRzad, plansza) == true)
+                            {
+                                return WagaZwyciestwa;
+                            }
+                        }
+                        else
+                        {
+                            if (Wynik(ref wynik, ref znakiIPuste, ref znakiNiezblokowane, ref znakiPodRzad, plansza) == true)
+                            {
+                                return WagaZwyciestwa;
+                            }
+                        }
                     }
                 }
-                CzyNowaNajdluzszaSekwencja(ref tmp, ref najdluzszaSekwencja);
+                if (Wynik(ref wynik, ref znakiIPuste, ref znakiNiezblokowane, ref znakiPodRzad, plansza) == true)
+                {
+                    return WagaZwyciestwa;
+                }
             }
-            if (CzyWygrana(najdluzszaSekwencja, plansza.IleByWygrac) == true)
-            {
-                return najdluzszaSekwencja;
-            }
+
             // skos 1
             for (int i = 0; i < plansza.Rozmiar; i++)
             {
@@ -81,28 +104,63 @@ namespace KolkoKrzyzyk
                 {
                     if (plansza.Znak(j, i + j) == znak)
                     {
-                        tmp++;
+                        DobryZnak(ref znakiIPuste, ref znakiNiezblokowane, ref znakiPodRzad);
                     }
                     else
                     {
-                        CzyNowaNajdluzszaSekwencja(ref tmp, ref najdluzszaSekwencja);
-                    }
-                    if (plansza.Znak(i + j, j) == znak)
-                    {
-                        tmp2++;
-                    }
-                    else
-                    {
-                        CzyNowaNajdluzszaSekwencja(ref tmp2, ref najdluzszaSekwencja);
+                        if (plansza.Znak(j, i + j) == Znak.Puste)
+                        {
+                            if (PustaKratka(ref znakiIPuste, ref znakiPodRzad, plansza) == true)
+                            {
+                                return WagaZwyciestwa;
+                            }
+                        }
+                        else
+                        {
+                            if (Wynik(ref wynik, ref znakiIPuste, ref znakiNiezblokowane, ref znakiPodRzad, plansza) == true)
+                            {
+                                return WagaZwyciestwa;
+                            }
+                        }
                     }
                 }
-                CzyNowaNajdluzszaSekwencja(ref tmp, ref najdluzszaSekwencja);
-                CzyNowaNajdluzszaSekwencja(ref tmp2, ref najdluzszaSekwencja);
+                if (Wynik(ref wynik, ref znakiIPuste, ref znakiNiezblokowane, ref znakiPodRzad, plansza) == true)
+                {
+                    return WagaZwyciestwa;
+                }
             }
-            if (CzyWygrana(najdluzszaSekwencja, plansza.IleByWygrac) == true)
+            for (int i = 1; i < plansza.Rozmiar; i++)
             {
-                return najdluzszaSekwencja;
+                for (int j = 0; j < plansza.Rozmiar - i; j++)
+                {
+                    if (plansza.Znak(i + j, j) == znak)
+                    {
+                        DobryZnak(ref znakiIPuste, ref znakiNiezblokowane, ref znakiPodRzad);
+                    }
+                    else
+                    {
+                        if (plansza.Znak(i + j, j) == Znak.Puste)
+                        {
+                            if (PustaKratka(ref znakiIPuste, ref znakiPodRzad, plansza) == true)
+                            {
+                                return WagaZwyciestwa;
+                            }
+                        }
+                        else
+                        {
+                            if (Wynik(ref wynik, ref znakiIPuste, ref znakiNiezblokowane, ref znakiPodRzad, plansza) == true)
+                            {
+                                return WagaZwyciestwa;
+                            }
+                        }
+                    }
+                }
+                if (Wynik(ref wynik, ref znakiIPuste, ref znakiNiezblokowane, ref znakiPodRzad, plansza) == true)
+                {
+                    return WagaZwyciestwa;
+                }
             }
+
             // skos 2
             for (int i = 0; i < plansza.Rozmiar; i++)
             {
@@ -110,54 +168,129 @@ namespace KolkoKrzyzyk
                 {
                     if (plansza.Znak(j, plansza.Rozmiar - 1 - i - j) == znak)
                     {
-                        tmp++;
+                        DobryZnak(ref znakiIPuste, ref znakiNiezblokowane, ref znakiPodRzad);
                     }
                     else
                     {
-                        CzyNowaNajdluzszaSekwencja(ref tmp, ref najdluzszaSekwencja);
-                    }
-                    if (plansza.Znak(j + i, plansza.Rozmiar - 1 - j) == znak)
-                    {
-                        tmp2++;
-                    }
-                    else
-                    {
-                        CzyNowaNajdluzszaSekwencja(ref tmp2, ref najdluzszaSekwencja);
+                        if (plansza.Znak(j, plansza.Rozmiar - 1 - i - j) == Znak.Puste)
+                        {
+                            if (PustaKratka(ref znakiIPuste, ref znakiPodRzad, plansza) == true)
+                            {
+                                return WagaZwyciestwa;
+                            }
+                        }
+                        else
+                        {
+                            if (Wynik(ref wynik, ref znakiIPuste, ref znakiNiezblokowane, ref znakiPodRzad, plansza) == true)
+                            {
+                                return WagaZwyciestwa;
+                            }
+                        }
                     }
                 }
-                CzyNowaNajdluzszaSekwencja(ref tmp, ref najdluzszaSekwencja);
-                CzyNowaNajdluzszaSekwencja(ref tmp2, ref najdluzszaSekwencja);
+                if (Wynik(ref wynik, ref znakiIPuste, ref znakiNiezblokowane, ref znakiPodRzad, plansza) == true)
+                {
+                    return WagaZwyciestwa;
+                }
             }
-            return najdluzszaSekwencja;
+            for (int i = 1; i < plansza.Rozmiar; i++)
+            {
+                for (int j = 0; j < plansza.Rozmiar - i; j++)
+                {
+                    if (plansza.Znak(j + i, plansza.Rozmiar - 1 - j) == znak)
+                    {
+                        DobryZnak(ref znakiIPuste, ref znakiNiezblokowane, ref znakiPodRzad);
+                    }
+                    else
+                    {
+                        if (plansza.Znak(j + i, plansza.Rozmiar - 1 - j) == Znak.Puste)
+                        {
+                            if (PustaKratka(ref znakiIPuste, ref znakiPodRzad, plansza) == true)
+                            {
+                                return WagaZwyciestwa;
+                            }
+                        }
+                        else
+                        {
+                            if (Wynik(ref wynik, ref znakiIPuste, ref znakiNiezblokowane, ref znakiPodRzad, plansza) == true)
+                            {
+                                return WagaZwyciestwa;
+                            }
+                        }
+                    }
+                }
+                if (Wynik(ref wynik, ref znakiIPuste, ref znakiNiezblokowane, ref znakiPodRzad, plansza) == true)
+                {
+                    return WagaZwyciestwa;
+                }
+            }
+            return wynik;
+        }
+
+        private bool Wynik(ref int wynik, ref int znakiIPuste, ref int znakiNiezblokowane, ref int znakiPodRzad, Plansza plansza)
+        {
+            if (znakiPodRzad >= plansza.IleByWygrac)
+            {
+                return true;
+            }
+            if (znakiIPuste >= plansza.IleByWygrac)
+            {
+                wynik += znakiNiezblokowane;
+            }
+            znakiIPuste = 0;
+            znakiNiezblokowane = 0;
+            znakiPodRzad = 0;
+            return false;
+        }
+
+        private void DobryZnak(ref int znakiIPuste, ref int znakiNiezblokowane, ref int znakiPodRzad)
+        {
+            znakiIPuste++;
+            znakiNiezblokowane++;
+            znakiPodRzad++;
+        }
+
+        private bool PustaKratka(ref int znakiIPuste, ref int znakiPodRzad, Plansza plansza)
+        {
+            znakiIPuste++;
+            if (znakiPodRzad >= plansza.IleByWygrac)
+            {
+                return true;
+            }
+            znakiPodRzad = 0;
+            return false;
         }
 
 
-        /*
-        public int Ocena(Plansza plansza, Znak znak)
+        public bool CzyWygrana(Znak znak, Plansza plansza)
         {
-            int najdluzszaSekwencja = 0;
-            int tmp = 0;
-            int tmp2 = 0;
+            int znakiPodRzad = 0;
+
             // rzad
             for (int i = 0; i < plansza.Rozmiar; i++)
             {
                 for (int j = 0; j < plansza.Rozmiar; j++)
                 {
-                    if(plansza.Znak(i, j) == znak)
+                    if (plansza.Znak(i, j) == znak)
                     {
-                        tmp++;
+                        znakiPodRzad++;
                     }
                     else
                     {
-                        CzyNowaNajdluzszaSekwencja(ref tmp, ref najdluzszaSekwencja);
+                        if (znakiPodRzad >= plansza.IleByWygrac)
+                        {
+                            return true;
+                        }
+                        znakiPodRzad = 0;
                     }
                 }
-                CzyNowaNajdluzszaSekwencja(ref tmp, ref najdluzszaSekwencja);
+                if (znakiPodRzad >= plansza.IleByWygrac)
+                {
+                    return true;
+                }
+                znakiPodRzad = 0;
             }
-            if (CzyWygrana(najdluzszaSekwencja, plansza.IleByWygrac) == true)
-            {
-                return WagaZwyciestwa;
-            }
+
             // kolumna
             for (int i = 0; i < plansza.Rozmiar; i++)
             {
@@ -165,48 +298,72 @@ namespace KolkoKrzyzyk
                 {
                     if (plansza.Znak(j, i) == znak)
                     {
-                        tmp++;
+                        znakiPodRzad++;
                     }
                     else
                     {
-                        CzyNowaNajdluzszaSekwencja(ref tmp, ref najdluzszaSekwencja);
+                        if (znakiPodRzad >= plansza.IleByWygrac)
+                        {
+                            return true;
+                        }
+                        znakiPodRzad = 0;
                     }
                 }
-                CzyNowaNajdluzszaSekwencja(ref tmp, ref najdluzszaSekwencja);
+                if (znakiPodRzad >= plansza.IleByWygrac)
+                {
+                    return true;
+                }
+                znakiPodRzad = 0;
             }
-            if (CzyWygrana(najdluzszaSekwencja, plansza.IleByWygrac) == true)
-            {
-                return WagaZwyciestwa;
-            }
+
             // skos 1
             for (int i = 0; i < plansza.Rozmiar; i++)
             {
                 for (int j = 0; j < plansza.Rozmiar - i; j++)
                 {
-                    if (plansza.Znak(j, i+j) == znak)
+                    if (plansza.Znak(j, i + j) == znak)
                     {
-                        tmp++;
+                        znakiPodRzad++;
                     }
                     else
                     {
-                        CzyNowaNajdluzszaSekwencja(ref tmp, ref najdluzszaSekwencja);
-                    }
-                    if (plansza.Znak(i+j, j) == znak)
-                    {
-                        tmp2++;
-                    }
-                    else
-                    {
-                        CzyNowaNajdluzszaSekwencja(ref tmp2, ref najdluzszaSekwencja);
+                        if (znakiPodRzad >= plansza.IleByWygrac)
+                        {
+                            return true;
+                        }
+                        znakiPodRzad = 0;
                     }
                 }
-                CzyNowaNajdluzszaSekwencja(ref tmp, ref najdluzszaSekwencja);
-                CzyNowaNajdluzszaSekwencja(ref tmp2, ref najdluzszaSekwencja);
+                if (znakiPodRzad >= plansza.IleByWygrac)
+                {
+                    return true;
+                }
+                znakiPodRzad = 0;
             }
-            if (CzyWygrana(najdluzszaSekwencja, plansza.IleByWygrac) == true)
+            for (int i = 1; i < plansza.Rozmiar; i++)
             {
-                return WagaZwyciestwa;
+                for (int j = 0; j < plansza.Rozmiar - i; j++)
+                {
+                    if (plansza.Znak(i + j, j) == znak)
+                    {
+                        znakiPodRzad++;
+                    }
+                    else
+                    {
+                        if (znakiPodRzad >= plansza.IleByWygrac)
+                        {
+                            return true;
+                        }
+                        znakiPodRzad = 0;
+                    }
+                }
+                if (znakiPodRzad >= plansza.IleByWygrac)
+                {
+                    return true;
+                }
+                znakiPodRzad = 0;
             }
+
             // skos 2
             for (int i = 0; i < plansza.Rozmiar; i++)
             {
@@ -214,46 +371,46 @@ namespace KolkoKrzyzyk
                 {
                     if (plansza.Znak(j, plansza.Rozmiar - 1 - i - j) == znak)
                     {
-                        tmp++;
+                        znakiPodRzad++;
                     }
                     else
                     {
-                        CzyNowaNajdluzszaSekwencja(ref tmp, ref najdluzszaSekwencja);
-                    }
-                    if (plansza.Znak(j + i, plansza.Rozmiar - 1 - j) == znak)
-                    {
-                        tmp2++;
-                    }
-                    else
-                    {
-                        CzyNowaNajdluzszaSekwencja(ref tmp2, ref najdluzszaSekwencja);
+                        if (znakiPodRzad >= plansza.IleByWygrac)
+                        {
+                            return true;
+                        }
+                        znakiPodRzad = 0;
                     }
                 }
-                CzyNowaNajdluzszaSekwencja(ref tmp, ref najdluzszaSekwencja);
-                CzyNowaNajdluzszaSekwencja(ref tmp2, ref najdluzszaSekwencja);
+                if (znakiPodRzad >= plansza.IleByWygrac)
+                {
+                    return true;
+                }
+                znakiPodRzad = 0;
             }
-            if (CzyWygrana(najdluzszaSekwencja, plansza.IleByWygrac) == true)
+            for (int i = 1; i < plansza.Rozmiar; i++)
             {
-                return WagaZwyciestwa;
+                for (int j = 0; j < plansza.Rozmiar - i; j++)
+                {
+                    if (plansza.Znak(j + i, plansza.Rozmiar - 1 - j) == znak)
+                    {
+                        znakiPodRzad++;
+                    }
+                    else
+                    {
+                        if (znakiPodRzad >= plansza.IleByWygrac)
+                        {
+                            return true;
+                        }
+                        znakiPodRzad = 0;
+                    }
+                }
+                if (znakiPodRzad >= plansza.IleByWygrac)
+                {
+                    return true;
+                }
+                znakiPodRzad = 0;
             }
-            return 0;
-        }
-        */
-
-        private void CzyNowaNajdluzszaSekwencja(ref int tmp, ref int najdluzszaSekwencja)
-        {
-            if (tmp > najdluzszaSekwencja)
-            {
-                najdluzszaSekwencja = tmp;
-            }
-            tmp = 0;
-        }
-        
-
-        private bool CzyWygrana(int najdluzszaSekwencja, int ileByWygrac)
-        {
-            if (najdluzszaSekwencja >= ileByWygrac)
-                return true;
             return false;
         }
     }

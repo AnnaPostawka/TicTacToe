@@ -22,23 +22,29 @@ namespace KolkoKrzyzyk
             return Pobierz(3, rozmiar, output);
         }
 
-        public Ruch PobierzWspolrzedne(int rozmiar)
+        public Ruch PobierzWspolrzedne(Plansza plansza)
         {
-            int x = PobierzX(rozmiar);
-            int y = PobierzY(rozmiar);
-            Ruch ruch = new Ruch(x, y);
-            return ruch;
+            Console.WriteLine("Podaj wspolrzedne: ");
+            int x = PobierzX(plansza.Rozmiar);
+            int y = PobierzY(plansza.Rozmiar);
+            while (plansza.Znak(x, y) != Znak.Puste)
+            {
+                Console.WriteLine("To pole jest juz zajete. Podaj inne wspolrzedne: ");
+                x = PobierzX(plansza.Rozmiar);
+                y = PobierzY(plansza.Rozmiar);
+            }
+            return new Ruch(x, y);
         }
 
         private int PobierzX(int rozmiar)
         {
-            string output = "X: ";
+            string output = "Wiersz: ";
             return Pobierz(0, rozmiar - 1, output);
         }
 
         private int PobierzY(int rozmiar)
         {
-            string output = "Y: ";
+            string output = "Kolumna: ";
             return Pobierz(0, rozmiar - 1, output);
         }
 
@@ -52,22 +58,10 @@ namespace KolkoKrzyzyk
                 Console.Write(output);
 
                 string input = Console.ReadLine();
-
-                // ToInt32 can throw FormatException or OverflowException.
+                
                 try
                 {
                     wartosc = Convert.ToInt32(input);
-                }
-                catch (FormatException)
-                {
-                    Console.WriteLine("To nie jest wartosc liczbowa.");
-                }
-                catch (OverflowException)
-                {
-                    Console.WriteLine("Za duza liczba.");
-                }
-                finally
-                {
                     if (wartosc > gornaGranica)
                     {
                         Console.WriteLine("Za duza wartosc.");
@@ -80,6 +74,14 @@ namespace KolkoKrzyzyk
                     {
                         repeat = false;
                     }
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("To nie jest wartosc liczbowa.");
+                }
+                catch (OverflowException)
+                {
+                    Console.WriteLine("Za duza liczba.");
                 }
             }
             return wartosc;
