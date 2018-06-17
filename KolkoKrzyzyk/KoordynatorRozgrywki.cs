@@ -26,7 +26,7 @@ namespace KolkoKrzyzyk
             bool wygrana = false;
             IGracz aktualnyGracz = gracz1;
 
-            while(wygrana != true && nrRuchu < plansza.PoleGry.Length)
+            while(wygrana != true && nrRuchu < plansza.LiczbaKratek)
             {
                 wygrana = WykonajRuch(aktualnyGracz);
                 WyswietlaczPlanszy.NarysujPlansze(plansza);
@@ -34,7 +34,7 @@ namespace KolkoKrzyzyk
                 {
                     Console.WriteLine("Wygrał gracz {0}!", aktualnyGracz.Znak);
                 }
-                if(nrRuchu == plansza.PoleGry.Length)
+                if(nrRuchu == plansza.LiczbaKratek - 1)
                 {
                     wygrana = true;
                     Console.WriteLine("Remis. Koniec gry.");

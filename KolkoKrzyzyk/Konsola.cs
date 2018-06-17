@@ -1,28 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace KolkoKrzyzyk
 {
     class Konsola
     {
-        public Konsola()
-        {
-        }
-
-        public int PobierzRozmiar()
+        public static int PobierzRozmiar()
         {
             string output = "Podaj dlugosc boku planszy (od 3 do 10): ";
             return Pobierz(3, 10, output);
         }
 
-        public int PobierzIleByWygrac(int rozmiar)
+        public static int PobierzIleByWygrac(int rozmiar)
         {
             string output = "Podaj dlugosc zwycieskiej sekwencji: ";
             return Pobierz(3, rozmiar, output);
         }
 
-        public Ruch PobierzWspolrzedne(Plansza plansza)
+        public static Ruch PobierzWspolrzedne(Plansza plansza)
         {
             Console.WriteLine("Podaj wspolrzedne: ");
             int x = PobierzX(plansza.Rozmiar);
@@ -36,24 +30,24 @@ namespace KolkoKrzyzyk
             return new Ruch(x, y);
         }
 
-        private int PobierzX(int rozmiar)
+        private static int PobierzX(int rozmiar)
         {
             string output = "Wiersz: ";
             return Pobierz(0, rozmiar - 1, output);
         }
 
-        private int PobierzY(int rozmiar)
+        private static int PobierzY(int rozmiar)
         {
             string output = "Kolumna: ";
             return Pobierz(0, rozmiar - 1, output);
         }
 
-        private int Pobierz(int dolnaGranica, int gornaGranica, string output)
+        private static int Pobierz(int dolnaGranica, int gornaGranica, string output)
         {
             int wartosc = 0;
-            bool repeat = true;
+            bool powtarzaj = true;
 
-            while (repeat)
+            while (powtarzaj)
             {
                 Console.Write(output);
 
@@ -72,7 +66,7 @@ namespace KolkoKrzyzyk
                     }
                     else
                     {
-                        repeat = false;
+                        powtarzaj = false;
                     }
                 }
                 catch (FormatException)
@@ -87,32 +81,52 @@ namespace KolkoKrzyzyk
             return wartosc;
         }
 
-        public bool PobierzGracza(int nr)
-        {
-            bool isHuman = true;
-            bool repeat = true;
+        public static bool PobierzGracza(int nr)
+        {            
+            string output = "Wybierz, czy Gracz" + nr.ToString() + " ma byc czlowiekiem czy komputerem [C / K]: ";
+            bool czyCzlowiek = PobierzOdpowiedz(output, "C", "K");
 
-            while (repeat)
+            return czyCzlowiek;
+        }
+        
+
+        public static bool JakiAlgorytm(ref int ilePoziomow)
+        {
+            string output = "Wybierz glebokosc algorytmu MinMax: ";
+            ilePoziomow = Pobierz(1, 10, output);
+
+            output = "Zastosowac ciecia Alpha-Beta? [T / N]: ";
+            bool alphaBeta = PobierzOdpowiedz(output, "T", "N");
+
+            return alphaBeta;
+        }
+
+        private static bool PobierzOdpowiedz(string output, string prawda, string falsz)
+        {
+            bool odpowiedz = true;
+            bool powtarzaj = true;
+
+            while (powtarzaj)
             {
-                Console.Write("Wybierz, czy Gracz{0} ma byc czlowiekiem czy komputerem [C / K]: ", nr);
+                Console.Write(output);
 
                 string input = Console.ReadLine();
-                if (input.CompareTo("C") == 0 || input.ToLower().CompareTo("c") == 0)
+                if (input.CompareTo(prawda) == 0 || input.ToLower().CompareTo(prawda.ToLower()) == 0)
                 {
-                    isHuman = true;
-                    repeat = false;
+                    odpowiedz = true;
+                    powtarzaj = false;
                 }
-                else if (input.CompareTo("K") == 0 || input.ToLower().CompareTo("k") == 0)
+                else if (input.CompareTo(falsz) == 0 || input.ToLower().CompareTo(falsz.ToLower()) == 0)
                 {
-                    isHuman = false;
-                    repeat = false;
+                    odpowiedz = false;
+                    powtarzaj = false;
                 }
                 else
                 {
                     Console.WriteLine("Nieprawidlowa wartosc.");
                 }
             }
-            return isHuman;
+            return odpowiedz;
         }
     }
 }

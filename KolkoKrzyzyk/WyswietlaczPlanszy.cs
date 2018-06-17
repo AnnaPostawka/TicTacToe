@@ -31,7 +31,7 @@ namespace KolkoKrzyzyk
 
         private static void WspolrzedneWiersze(int wiersz)
         {
-            Console.Write(" {0}  ", wiersz);   // wiersz+1
+            Console.Write(" {0}  ", wiersz);
         }
 
         private static void LiniaPozioma(int rozmiar)
@@ -50,7 +50,7 @@ namespace KolkoKrzyzyk
             Tabulacja();
             for (int kolumna = 0; kolumna < rozmiar; kolumna++)
             {
-                Console.Write("  {0} ", kolumna);   // kolumna+1
+                Console.Write("  {0} ", kolumna);
             }
             Console.WriteLine();
         }
@@ -68,7 +68,7 @@ namespace KolkoKrzyzyk
 
         private static void NarysujZnak(int i, int j, Plansza plansza)
         {
-            switch (plansza.PoleGry[i, j].Znak)
+            switch (plansza.Znak(i, j))
             {
                 case Znak.Kolko:
                     Console.Write("O");

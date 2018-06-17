@@ -6,8 +6,7 @@ namespace KolkoKrzyzyk
 {
     class Budowniczy
     {
-        private KoordynatorRozgrywki koordynatorRozgrywki;
-        private Konsola konsola = new Konsola();
+        private readonly KoordynatorRozgrywki koordynatorRozgrywki;
 
         public Budowniczy()
         {
@@ -20,22 +19,24 @@ namespace KolkoKrzyzyk
         private IGracz StworzGracza(int nr, Znak znak)
         {
             IGracz gracz;
-            bool isHuman = konsola.PobierzGracza(nr);
-            if (isHuman == true)
+            bool czyCzlowiek = Konsola.PobierzGracza(nr);
+            if (czyCzlowiek)
             {
                 gracz = new Czlowiek(znak);
             }
             else
             {
-                gracz = new Komputer(znak);
+                int ilePoziomow = 0;
+                bool alphaBeta = Konsola.JakiAlgorytm(ref ilePoziomow);
+                gracz = new Komputer(znak, ilePoziomow, alphaBeta);
             }
             return gracz;
         }
 
         private Plansza StworzPlansze()
         {
-            int rozmiar = konsola.PobierzRozmiar();
-            int ileByWygrac = konsola.PobierzIleByWygrac(rozmiar);
+            int rozmiar = Konsola.PobierzRozmiar();
+            int ileByWygrac = Konsola.PobierzIleByWygrac(rozmiar);
             Plansza plansza = new Plansza(rozmiar, ileByWygrac);
             return plansza;
         }

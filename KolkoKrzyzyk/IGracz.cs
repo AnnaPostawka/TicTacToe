@@ -24,8 +24,7 @@ namespace KolkoKrzyzyk
 
         public override Ruch Graj(Plansza plansza)
         {
-            Konsola konsola = new Konsola();
-            Ruch ruch = konsola.PobierzWspolrzedne(plansza);
+            Ruch ruch = Konsola.PobierzWspolrzedne(plansza);
             return ruch;
         }
     }
@@ -37,15 +36,28 @@ namespace KolkoKrzyzyk
         {
         }
 
-        private int ilePoziomow = 0;
+        public Komputer(Znak znak, int ilePoziomow, bool alphaBeta) : base(znak)
+        {
+            this.ilePoziomow = ilePoziomow;
+            this.alphaBeta = alphaBeta;
+        }
+
+        private int ilePoziomow = 6;
+        private bool alphaBeta = true;
     
         public override Ruch Graj(Plansza plansza)
         {
-            Ruch ruch = new Ruch();
-            Plansza planszaKopia = plansza.Kopia();
-            ilePoziomow = 10;
-            var wynikMinMax = MinMax(planszaKopia, ilePoziomow, true);
-            return wynikMinMax.Item2;
+            if (alphaBeta)
+            {
+                var wynikMinMaxAlphaBeta = MinMaxAlphaBeta(plansza, ilePoziomow, true, Int32.MinValue, Int32.MaxValue);
+                return wynikMinMaxAlphaBeta.Item2;
+            }
+            else
+            {
+                var wynikMinMax = MinMax(plansza, ilePoziomow, true);
+                return wynikMinMax.Item2;
+            }
+
         }
 
         
@@ -67,10 +79,7 @@ namespace KolkoKrzyzyk
                 {
                     Ruch tmpRuch = lista.Last.Value;
                     lista.RemoveLast();
-                    if (poziom == ilePoziomow)
-                    {
-                        Console.WriteLine("Potencjalny ruch: {0} {1}", tmpRuch.X, tmpRuch.Y);
-                    }
+
                     Plansza kopiaPlanszy = plansza.Kopia();
                     kopiaPlanszy.UstawZnak(tmpRuch, Znak);
 
@@ -79,15 +88,6 @@ namespace KolkoKrzyzyk
                     {
                         najlepszyWynik = tmpWynik;
                         najlepszyRuch = tmpRuch;
-                    }
-                    if(poziom == ilePoziomow - 1)
-                    {
-                        Console.WriteLine("Poziom {3}, GraczMax {4}: Tmp:  Ocena: {0}, Ruch: {1} {2}", tmpWynik, tmpRuch.X, tmpRuch.Y, poziom, GraczMax);
-                        Console.WriteLine("Poziom {3}, GraczMax {4}: Best: Ocena: {0}, Ruch: {1} {2}", najlepszyWynik, najlepszyRuch.X, najlepszyRuch.Y, poziom, GraczMax);
-                    }
-                    if (poziom == ilePoziomow)
-                    {
-                        Console.WriteLine("Poziom {3}, GraczMax {4}: Ocena: {0}, Ruch: {1} {2}", najlepszyWynik, najlepszyRuch.X, najlepszyRuch.Y, poziom, GraczMax);
                     }
                 }
                 return new Tuple<int, Ruch>(najlepszyWynik, najlepszyRuch);
@@ -99,10 +99,7 @@ namespace KolkoKrzyzyk
                 {
                     Ruch tmpRuch = lista.Last.Value;
                     lista.RemoveLast();
-                    if (poziom == ilePoziomow)
-                    {
-                        Console.WriteLine("Potencjalny ruch: {0} {1}", tmpRuch.X, tmpRuch.Y);
-                    }
+
                     Plansza kopiaPlanszy = plansza.Kopia();
                     kopiaPlanszy.UstawZnak(tmpRuch, Przeciwny.Znak(Znak));
 
@@ -112,17 +109,68 @@ namespace KolkoKrzyzyk
                         najlepszyWynik = tmpWynik;
                         najlepszyRuch = tmpRuch;
                     }
-                    if (poziom == ilePoziomow - 1)
-                    {
-                        Console.WriteLine("Poziom {3}, GraczMax {4}: Tmp:  Ocena: {0}, Ruch: {1} {2}", tmpWynik, tmpRuch.X, tmpRuch.Y, poziom, GraczMax);
-                        Console.WriteLine("Poziom {3}, GraczMax {4}: Best: Ocena: {0}, Ruch: {1} {2}", najlepszyWynik, najlepszyRuch.X, najlepszyRuch.Y, poziom, GraczMax);
-                    }
-                    if (poziom == ilePoziomow)
-                    {
-                        Console.WriteLine("Poziom {3}, GraczMax {4}: Ocena: {0}, Ruch: {1} {2}", najlepszyWynik, najlepszyRuch.X, najlepszyRuch.Y, poziom, GraczMax);
-                    }
                 }
                 return new Tuple<int, Ruch>(najlepszyWynik, najlepszyRuch);
+            }
+        }
+
+
+        private Tuple<int, Ruch> MinMaxAlphaBeta(Plansza plansza, int poziom, bool GraczMax, int alpha, int beta)
+        {
+            FunkcjaOceny funkcjaOceny = new FunkcjaOceny();
+            LinkedList<Ruch> lista = GenerujRozklady(plansza);
+            int tmpWynik = 0;
+            Ruch najlepszyRuch = new Ruch(-1, -1);
+            if (poziom == 0 || lista.Count == 0 || funkcjaOceny.CzyWygrana(Przeciwny.Znak(Znak), plansza) || funkcjaOceny.CzyWygrana(Znak, plansza))
+            {
+                int wynik = funkcjaOceny.Ocena(plansza, Znak);
+                return new Tuple<int, Ruch>(wynik, najlepszyRuch);
+            }
+            if (GraczMax == true)
+            {
+                while (lista.Count != 0)
+                {
+                    Ruch tmpRuch = lista.Last.Value;
+                    lista.RemoveLast();
+
+                    Plansza kopiaPlanszy = plansza.Kopia();
+                    kopiaPlanszy.UstawZnak(tmpRuch, Znak);
+
+                    tmpWynik = MinMaxAlphaBeta(kopiaPlanszy, poziom - 1, false, alpha, beta).Item1;
+                    if (alpha < tmpWynik)
+                    {
+                        alpha = tmpWynik;
+                        najlepszyRuch = tmpRuch;
+                    }
+                    if (alpha >= beta)
+                    {
+                        break;
+                    }
+                }
+                return new Tuple<int, Ruch>(alpha, najlepszyRuch);
+            }
+            else
+            {
+                while (lista.Count != 0)
+                {
+                    Ruch tmpRuch = lista.Last.Value;
+                    lista.RemoveLast();
+
+                    Plansza kopiaPlanszy = plansza.Kopia();
+                    kopiaPlanszy.UstawZnak(tmpRuch, Przeciwny.Znak(Znak));
+
+                    tmpWynik = MinMaxAlphaBeta(kopiaPlanszy, poziom - 1, true, alpha, beta).Item1;
+                    if (beta > tmpWynik)
+                    {
+                        beta = tmpWynik;
+                        najlepszyRuch = tmpRuch;
+                    }
+                    if (alpha >= beta)
+                    {
+                        break;
+                    }
+                }
+                return new Tuple<int, Ruch>(beta, najlepszyRuch);
             }
         }
 
@@ -143,10 +191,8 @@ namespace KolkoKrzyzyk
             }
             return lista;
         }
-
     }
-
-
+    
 
     public class Ruch
     {
@@ -161,18 +207,6 @@ namespace KolkoKrzyzyk
 
         public Ruch()
         {
-        }
-    }
-
-    class PotencjalnyRuch
-    {
-        public Plansza Plansza { get; set; }
-        public Ruch Ruch { get; set; }
-
-        public PotencjalnyRuch(Plansza plansza, Ruch ruch)
-        {
-            Plansza = plansza;
-            Ruch = ruch;
         }
     }
 }

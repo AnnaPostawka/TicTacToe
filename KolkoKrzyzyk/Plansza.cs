@@ -8,14 +8,16 @@ namespace KolkoKrzyzyk
     {
         public int Rozmiar { get; }
         public int IleByWygrac { get; }
-        public Kratka[,] PoleGry = null;
-        public int IleWypelnionych { get; set; }
+        private Kratka[,] PoleGry = null;
+        public int LiczbaKratek { get; }
+        public int IleWypelnionych { get; private set; }
 
         public Plansza(int rozmiar, int ileByWygrac)
         {
-            this.Rozmiar = rozmiar;
-            this.IleByWygrac = ileByWygrac;
+            Rozmiar = rozmiar;
+            IleByWygrac = ileByWygrac;
             StworzPoleGry();
+            LiczbaKratek = PoleGry.Length;
             IleWypelnionych = 0;
         }
         

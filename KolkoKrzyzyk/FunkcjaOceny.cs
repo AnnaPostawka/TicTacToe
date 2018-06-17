@@ -4,7 +4,12 @@ using System.Text;
 
 namespace KolkoKrzyzyk
 {
-    public class FunkcjaOceny
+    public abstract class IFunkcjaOceny
+    {
+        public abstract int Ocena(Plansza plansza, Znak znak);
+    }
+
+    public class FunkcjaOceny : IFunkcjaOceny
     {
         public FunkcjaOceny()
         {
@@ -12,8 +17,7 @@ namespace KolkoKrzyzyk
 
         public int WagaZwyciestwa { get; set; } = 100;
 
-
-        public int Ocena(Plansza plansza, Znak znak)
+        public override int Ocena(Plansza plansza, Znak znak)
         {
             int wynik = Policz(znak, plansza);
             int wynikPrzeciwnika = Policz(Przeciwny.Znak(znak), plansza);
