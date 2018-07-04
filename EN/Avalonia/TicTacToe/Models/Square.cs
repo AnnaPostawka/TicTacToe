@@ -1,25 +1,10 @@
-﻿using Avalonia.Controls;
-using Avalonia.Controls.Shapes;
-using Avalonia.Media;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace TicTacToe.Models
 {
-    public class Square : Shape
+    class Square
     {
-        public Square(ContentControl drawingCanvas, Color color) : base(drawingCanvas, color)
-        {
-        }
-
-        public override void Draw()
-        {
-            var square = new Rectangle();
-            square.Fill = colorBrush;
-            square.Width = width;
-            square.Height = height;
-            square.Margin = margin;
-            var container = new StackPanel();
-            container.Children.Add(square);
-            drawingCanvas.Content = container;
-        }
     }
 }

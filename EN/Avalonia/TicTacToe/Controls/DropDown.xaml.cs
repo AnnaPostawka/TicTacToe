@@ -1,23 +1,19 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using Avalonia.Media;
 
-namespace TicTacToe.Views
+namespace TicTacToe.Controls
 {
-    public class MainWindow : Window
+    public class DropDown : UserControl
     {
-
-        public MainWindow()
+        public DropDown()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
         }
-
-
     }
 }

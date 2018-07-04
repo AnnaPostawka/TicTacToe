@@ -4,8 +4,8 @@ using System.Text;
 
 namespace TicTacToe.ViewModels
 {
-    public class MainWindowViewModel : ViewModelBase
+    public class MainWindowModel : ViewModelBase
     {
-        public string Greeting => "Hello World!";
+        public string NameOfTheGame => "Tic Tac Toe";
     }
 }

@@ -10,7 +10,7 @@ namespace TicTacToe
     {
         static void Main(string[] args)
         {
-            BuildAvaloniaApp().Start<MainWindow>(() => new MainWindowViewModel());
+            BuildAvaloniaApp().Start<MainWindow>(() => new MainWindowModel());
         }
 
         public static AppBuilder BuildAvaloniaApp()
