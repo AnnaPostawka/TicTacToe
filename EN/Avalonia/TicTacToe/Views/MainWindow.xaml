@@ -8,16 +8,25 @@
   <Design.DataContext>
     <vm:MainWindowModel/>
   </Design.DataContext>
+  <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Gap="8">
 
-  <StackPanel Orientation="Horizontal" Gap="8">
-    <StackPanel>
-      <TextBlock HorizontalAlignment="Center">Player 'X'</TextBlock>
-      <controls:DropDown />
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Gap="8">
+      <StackPanel>
+        <TextBlock>Player 'X'</TextBlock>
+        <controls:DropDown />
+      </StackPanel>
+      <StackPanel>
+        <TextBlock Text="Player 'O'"/>
+        <controls:DropDown />
+      </StackPanel>
     </StackPanel>
+
     <StackPanel>
-      <TextBlock Text=" Player 'O'"/>
-      <controls:DropDown />
+      <TextBlock Text="{Binding Greeting}"/>
+      <TextBox Text="{Binding Name}"/>
+      <Button Content="Say Hi!" Click="OnButtonClicked"/> 
     </StackPanel>
+
   </StackPanel>
 
   
