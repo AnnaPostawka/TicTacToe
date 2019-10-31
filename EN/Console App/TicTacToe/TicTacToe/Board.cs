@@ -21,13 +21,13 @@ namespace TicTacToe
             NonEmpty = 0;
         }
         
-        public void SetSymbol(int x, int y, Symbol znak)
+        public void SetSymbol(int x, int y, Symbol symbol)
         {
             if(Grid[x, y].Symbol != Symbol.Empty)
             {
                 throw new Exception();
             }
-            Grid[x, y].Symbol = znak;
+            Grid[x, y].Symbol = symbol;
             NonEmpty++;
         }
 
