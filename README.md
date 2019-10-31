@@ -21,7 +21,10 @@ Minimax with Alpha-Beta pruning
   - Depth of a Minimax algorithm
   - Minimax with or without Alpha-Beta pruning
 - Size of the board: 3x3 - 10x10
-- Length of a winning sequence (e.g. 3 in a row on a 5x5 board)
+- Length of a winning sequence: 3 - 10
+
+[![asciicast](https://asciinema.org/a/gjxqhxrsLmHTuwOkAqdrPA1YI.svg)](https://asciinema.org/a/gjxqhxrsLmHTuwOkAqdrPA1YI?t=10&speed=1.5)
+
 
 ## Further development
 
